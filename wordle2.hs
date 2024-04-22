@@ -73,7 +73,8 @@ verDic (Value word) dic = do
 verAlpha::Erreur String -> Erreur String
 verAlpha (Err e) = (Err e)
 verAlpha (Value w) = do
-    let e = foldl (\acc c -> acc || ((ord c)<97) || ((ord c)>122) || ((ord c)>124) || ((ord c)>122))  False w
+    -- [97,122] and [224,252] for [a,z] and [à,ü]
+    let e = foldl (\acc c -> acc || ((ord c)<97) || (((ord c)>122) && (((ord c)<224) || ((ord c)>252)))) False w
     if e 
         then Err "Non alphabetic value in your word"
         else Value w
@@ -126,10 +127,9 @@ checkword toCheck ref=
 doTurn :: String -> Int -> Int-> [String]-> IO ()
 doTurn ref printM count dic  = do
     userWord <- asking dic --ask for a word
-    
     case userWord of 
         Err e -> do
-            putStrLn ("Error: " ++ e)
+            putStrLn ("\nError: " ++ e)
             doTurn ref printM count dic
 
 
@@ -191,19 +191,28 @@ numToLetter x
 
 listToLetter :: [Int] -> IO ()
 listToLetter l = do
+    putStrLn ""
     mapM_ numToLetter l
     putStrLn ""
+    
  
 listToSquares :: [Int] -> IO ()
 listToSquares l= do
+    putStrLn ""
     mapM_ numToSquare l
     putStrLn ""
+    
 
 selectPrinting :: IO Int
 selectPrinting = do
     putStrLn "Select your display method: \n 1:Colored squares\n 2:Letters (Red/Green/Yellow)"
     x <- getLine
-    return ( read x :: Int) 
+    putStrLn ""
+    if (length x) == 0
+        then return 1
+    else if ((ord (x!!0)) /= (ord '2'))
+        then return 1
+        else return 2
 
 printWord :: [Int]-> Int -> IO ()
 printWord l x = 
