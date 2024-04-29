@@ -10,7 +10,7 @@ main = do
 
     doTurn selected x 1
 
-    putStrLn ("The word was: " ++ selected)
+    putStrLn ("Le mot était: " ++ selected)
     
 
 
@@ -23,7 +23,7 @@ asking = do
 --Load a file and return a list of its list of his lines as a string list
 loadFile::IO [String]
 loadFile = do 
-    content <- readFile "dictionaire.txt"
+    content <- readFile "dictionaire/french_5_letters_minuscules.txt"
     return (lines content)
 
 --Given a string list return a random string in it
@@ -72,13 +72,13 @@ doTurn ref printM count = do
     printWord valList printM --print the corresponding response
     -- putStrLn ((show found) ++ " : " ++ (show count) )
     if found  
-        then putStrLn "Well played you won!" 
+        then putStrLn "Bien joué tu as gagné!" 
     else if count < 5 
         then do 
-            putStrLn ("Error try again. " ++ (show (5-count)) ++ " Remaining\n")
+            putStrLn ("Erreur essaye encore. " ++ (show (5-count)) ++ " Restant\n")
             doTurn ref printM (count+1)
         else
-            putStrLn "You lost, next time"
+            putStrLn "Tu as perdu, une prochaine fois"
 
 
 
@@ -120,8 +120,8 @@ numToSquare x
 numToLetter :: Int -> IO ()
 numToLetter x
     |x == 0 = putStr "R|"
-    |x == 1 = putStr "G|"
-    |x == 2 = putStr "Y|"
+    |x == 1 = putStr "V|"
+    |x == 2 = putStr "J|"
 
 listToLetter :: [Int] -> IO ()
 listToLetter l = do
@@ -135,7 +135,7 @@ listToSquares l= do
 
 selectPrinting :: IO Int
 selectPrinting = do
-    putStrLn "Select your display method: \n 1:Colored squares\n 2:Letters (Red/Green/Yellow)"
+    putStrLn "Selectionne ton mode d'affichage: \n 1:Carrés colorés \n 2:Lettres (Rouge/Vert/Jaune)"
     x <- getLine
     return ( read x :: Int) 
 
